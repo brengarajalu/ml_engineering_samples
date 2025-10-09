@@ -6,9 +6,9 @@ import asyncio
 import os
 
 # Settings control global defaults
-Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-base-en-v1.5")
+Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
 Settings.llm = Ollama(
-    model="gemma3:1b",
+    model="llama3.1",
     request_timeout=360.0,
     # Manually set the context window to limit memory usage
     context_window=8000,
@@ -19,11 +19,11 @@ documents = SimpleDirectoryReader("data").load_data()
 index = VectorStoreIndex.from_documents(
     documents,
     # we can optionally override the embed_model here
-    # embed_model=Settings.embed_model,
+    embed_model=Settings.embed_model,
 )
 query_engine = index.as_query_engine(
     # we can optionally override the llm here
-    # llm=Settings.llm,
+    llm=Settings.llm,
 )
 
 
@@ -40,7 +40,7 @@ async def search_documents(query: str) -> str:
 
 # Create an enhanced workflow with both tools
 agent = AgentWorkflow.from_tools_or_functions(
-    [multiply, search_documents],
+    [search_documents, multiply],
     llm=Settings.llm,
     system_prompt="""You are a helpful assistant that can perform calculations
     and search through documents to answer questions.""",
@@ -57,4 +57,7 @@ async def main():
 
 # Run the agent
 if __name__ == "__main__":
+    # embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+    # embeddings = embed_model.get_text_embedding("Hello World!")
+    # print(len(embeddings))
     asyncio.run(main())
