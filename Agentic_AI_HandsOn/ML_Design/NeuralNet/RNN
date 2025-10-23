@@ -1,0 +1,37 @@
+RNN :
+a. Recurrent Neural Networks (RNNs) are neural networks that are particularly effective for sequential data.
+b. Unlike traditional feedforward neural networks RNNs have connections that form loops allowing them to maintain a hidden state that can capture information from previous inputs.
+c. This makes them suitable for tasks such as time series prediction, natural language processing and many more task.
+
+
+Defining the RNN Model
+    Define a SentimentRNN class inheriting from PyTorch’s nn.Module.
+    Initialize an embedding layer to convert word indices into dense vectors.
+    Add an RNN layer to process the input sequences.
+    Include a fully connected layer to map RNN outputs to the final output size.
+    In the forward method pass input sequences through the embedding layer.
+    Create an initial hidden state of zeros and process the sequence using the RNN layer.
+    Take the output from the last time step and pass it through the fully connected layer to produce predictions.
+    Set parameters of vocabulary size, embedding size, hidden size and output size.
+    Start the SentimentRNN model with these parameters.
+
+
+class SentimentRNN(nn.Module):
+    def __init__(self, vocab_size, embed_size, hidden_size, output_size):
+        super(SentimentRNN, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, embed_size)
+        self.rnn = nn.RNN(embed_size, hidden_size, batch_first=True)
+        self.fc = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        x = self.embedding(x)
+        h0 = torch.zeros(1, x.size(0), hidden_size).to(x.device)
+        out, _ = self.rnn(x, h0)
+        out = self.fc(out[:, -1, :])
+        return out
+
+vocab_size = len(vocab) + 1
+embed_size = 128
+hidden_size = 128
+output_size = 2
+model = SentimentRNN(vocab_size, embed_size, hidden_size, output_size)

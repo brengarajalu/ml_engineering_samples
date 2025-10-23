@@ -1,0 +1,350 @@
+1. Data Engineering
+Getting Data
+
+ETL Pipelines & Data Sources
+Class Imbalance
+SMOTE
+Negative Sampling
+Hard Negative Mining
+Using Better Metrics (F1, ROC)
+Handling Missing Data
+Imputation
+Missing Feature Indicators
+Handling Outliers
+Standard Deviation
+Variance Removal
+Feature Crossing
+A technique where you combine two or more features to create a new feature that captures their interaction. Example: Price/Square_Foot for housing data.
+Train Test-Split
+Transforming Data
+
+Scaling & Transforms
+Min-Max Scaling
+Standardization
+Log Transform
+Exponential/Square Transform
+Discretization
+Quantile Binning
+Encoding
+Integer Encoding
+One-Hot Encoding
+Embedding
+Hashing
+Dimensionality Reduction & Embeddings
+
+Dimensionality Reduction
+Principal Component Analysis
+t-distributed Stochastic Neighbor Embedding
+Text Preprocessing and Embedding
+Normalization, Tokenization, Tokens to IDs
+Bag of Words, Count Vectorizer, TF-IDF
+BERT, word2vec (skip-gram, cbow)
+Image/Video Preprocessing and Embedding
+Resizing
+Normalization
+Color Space Transformation
+Video: Video Encoding, Frame Encoding *(*Frame Decoding, Frame Sampling)
+VGG, ResNet, ViT, CLIP
+Feature Importance
+
+Feature Importance
+Shuffling
+SHAP
+Tree Based Importance
+Pearson Correlation Coefficient
+Chi Square Test
+Models
+Heuristics
+Traditional Machine Learning
+
+Linear Regression
+implementation & basic formula for linear regression
+optimizing and training with ols or sgd
+evaluation metrics
+tradeoffs
+Logistic Regression
+implementation & basic formula for linear regression
+multinomial vs. ovr
+optimizing and training with ols or sgd
+evaluation metrics
+tradeoffs
+K-Nearest Neighbors
+basic implementation
+optimization
+evaluation metrics
+tradeoffs
+K-Means
+basic implementation
+optimization
+evaluation metrics
+tradeoffs
+Support Vector Machines
+basic implementation
+
+optimization
+
+evaluation metrics
+
+tradeoffs
+
+Decision Trees
+basic implementation
+optimization
+evaluation metrics
+tradeoffs
+random forests
+gradient boosted decision trees
+production usage
+Matrix Factorization
+basic implementation
+optimization
+evaluation metrics
+tradeoffs
+matrix factorization
+factorization machines vs. matrix factorization
+continual learning
+production usage
+Deep Learning
+
+Neural Networks
+
+What are the main (layer) components of a neural network?
+
+What are the most widely used hidden layers of a neural network and what are their uses?
+
+What is the relationship between backpropagation, gradient descent, and optimizers in the realm of neural networks?
+
+Layers (Input, Hidden, Output)
+Activation Functions
+Backpropagation
+Optimizers (Adam, SGD)
+Neural Network Layers
+
+Convolutional Neural Networks
+
+Convolution Layers
+Pooling Layers
+Feature Maps
+Common Architectures
+Representation Learning & Embedding Networks
+
+Key Components:
+
+Items/users mapped to dense vectors in shared space
+
+Embedding spaces (semantic, user/item) where similar items cluster together
+
+Text Embeddings
+
+BERT
+word2vec
+CBOW
+Skip-Gram
+Two Tower Networks
+
+What is a Two-Tower model?
+
+What layers comprise a typical two-tower architecture for recommendation systems?
+
+CLIP
+Graph Neural Networks
+
+Distance Metrics
+
+Cosine similarity
+Dot product
+Euclidean distance
+Training Methods
+
+Contrastive Learning
+Pairs similar items as positives, dissimilar as negatives
+Minimizes distance between positives, maximizes for negatives
+Example: Product viewed together = positive pair
+Triplet Loss
+Uses anchor, positive, negative examples
+Forces anchor closer to positive than negative
+Loss = max(0, negative_dist - positive_dist + margin)
+Example: (user, clicked_item, unclicked_item)
+Negative Sampling
+Randomly samples non-interacted items as negatives
+Reduces computation vs all possible negatives
+Methods: uniform, popularity-based, hard negative mining
+Self-supervised Learning
+Creates training data from item/user interactions
+Example: Predict next item in sequence
+Can use masked prediction tasks
+Leverages naturally occurring patterns in data
+Approximate Nearest Neighbor (ANN) search
+
+Finds similar vectors without exact computation
+Trade accuracy for speed
+Common algorithms: HNSW, IVF, FAISS
+LSH or tree-based indexing
+Hashes similar items to same buckets
+Multiple hash tables for better recall
+Common variants: MinHash, SimHash
+Storage
+
+In Memory
+Fastest retrieval
+Limited by RAM
+Good for real-time serving
+Database
+Scales beyond RAM
+Higher latency
+Better for large catalogs
+Examples: PostgreSQL, Elasticsearch
+Production systems often use tiered approach:
+Hot items in memory
+Cold items in database
+Update frequency based on usage
+Challenges
+
+Quality of training data
+Choosing embedding dimension
+Balancing compute vs accuracy
+Updating embeddings efficiently
+Dense vs sparse embeddings
+Multi-Task Learning Networks
+
+RNNs, LSTMs, and GRUs
+
+Transformers
+
+Wide & Deep Models
+
+End-to-End Systems
+
+Natural Language Processing
+
+Generative AI
+
+Large Language Models
+
+Attention Mechanism
+Self-Attention
+Encoder-Decoder
+Recommendation, Ranking & Personalization Systems
+
+Search Systems
+
+Model Training
+Loss Functions
+
+Binary Cross Entropy, Categorical Cross Entropy
+Mean Squared Error, Mean Average Error
+Contrastive Loss
+Bayesian Personalized Ranking
+Optimization & Regularization
+
+Gradient / Mini-batch Gradient Descent
+Stochastic Gradient Descent
+
+Mini-batch Stochastic Gradient Descent
+
+Why is mini-batch gradient descent typically preferred?
+
+Mini-batch gradient descent is preferred over stochastic and batch gradient descent as it balances computational efficiency with stable convergence, avoiding both the high cost of batch GD and the noisy updates of SGD, while also providing better generalization capabilities and effectively utilizing modern hardware acceleration through parallelism.
+
+Overfitting & Underfitting Detection
+Bias vs. Variance Tradeoff
+L1 & L2 Regularization
+Adam Optimizer
+Alternating Least Squares
+Neural Network Layers
+Input Layers
+Hidden Layers
+Dense/Fully Connected Layers
+Convolutional Layers (CNN, GCN)
+Recurrent Layers (LSTM, GRU, RNN)
+Embedding Layers
+Attention Mechanisms/Layers
+Utility Layers
+Dropout Layers
+Batch Normalization Layers
+Layer Normalization
+Pooling Layers (Max, Average)
+Residual/Skip Connections
+Activation Functions
+Sigmoid
+ReLU and Variants (Leaky ReLU, PReLU)
+Tanh
+Output Layers
+Classification (Softmax, Sigmoid)
+Regression
+Vanishing Gradient / Exploding Gradient
+Skip Connections
+Hyperparameter Tuning
+
+Grid Search
+Random Search
+Bayesian Optimization
+Additional Considerations
+
+Distributed Training
+Transfer Learning (Scratch vs. Fine-tuning) & Foundation Model
+Continual Learning & Model Retraining
+Data Freshness
+Model Evaluation
+Offline
+
+Regression: Mean Squared Error, Mean Average Error, RMSE
+Classification:
+Confusion Matrix (TP, FP, FN, TN)
+Accuracy, Precision, Recall, F1-score, ROC-AUC
+Ranking: Precsion @ K, Recall @ K, MRR, mAP, nDCG
+Embeddings: Cosine Similarity, Triplet Accuracy
+Image Generation: FID, Inception Score
+Natural Language Processing: BLEU, METEOR, ROGUE
+Online
+
+Content & Engagement
+
+Purchases
+
+Friend Requests
+
+Harmful Content
+
+Explicit
+
+Ad Click Prediction: Click through Rate, Revenue Lift
+Harmful Content Detection: Prevalence, Valid Appeals
+Video Recommendation: Click through Rate, Total Watch Time, Video Completion Rate
+Friend Recommendation: Number of Requests Sent per Day, Number of Requests Accepted per day
+Purchase Prediction: Conversion Rate, Average Order Value
+Search Quality: Query Success Rate, Reformulation Rate
+Implicit
+
+Engagement: Time Spent, Session Length, Bounce Rate
+Content Discovery: Diversity of Content Consumed, Exploration Rate
+User Satisfaction: Return Rate, Feature Usage Frequency
+Feed Quality: Scroll Depth, Time Between Interactions
+Recommendation Relevance: Save/Bookmark Rate, Long-term Retention
+Social Interaction: Reply Rate, Message Initiation
+Deployment & Serving
+Cloud vs. On Device
+Model Compression
+Production Serving [A/B Testing, Shadow Deployment, Bandits]
+Prediction Pipeline [Online vs. Offline Parts]
+Real Time Feature Stores & Feedback Loops
+Monitoring & Infra
+Operations: Throughput, Latency, # of Requests
+Alerts
+ML Specific:
+Data Drift [Covariate Shift/Feature Drift, Prior Probability Shift/Label Drift, Concept Drift] → Histogram Testing and Data Visualization
+Model Drift → perfomance degradation → train periodically check feature importance
+Seasonality → Timely pattern shifts that require model changes
+Infra
+Training
+MLFlow, Airflow, Kubeflow
+Sagemaker, Google Cloud AI Platform
+Deploying
+Github Actions, Jenkins
+Serving
+KServe, Sagemaker, Nvidia Triton
+Maintaining & Monitoring
+Prometheus, Grafana
+Continual Learning
+Versioning & Model Registry
+Caching

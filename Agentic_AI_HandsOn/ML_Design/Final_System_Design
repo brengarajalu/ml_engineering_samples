@@ -1,0 +1,368 @@
+ML System design
+=================
+
+Step 1	Problem Formulation
+Step 2	Metrics (Offline and Online)
+Step 3	Architectural Components (MVP Logic)
+Step 4	Data Collection and Preparation
+Step 5	Feature Engineering
+Step 6	Model Development and Offline Evaluation
+Step 7	Prediction Service
+Step 8	Online Testing and Deployment
+Step 9	Scaling, Monitoring, and Updates
+
+Step 1  - Problem formulation -
+-----------------------------
+a. Clarifying questions on Requirements
+    Scope (features needed), scale, and personalization, CTR
+    Data: sources and availability
+b. Batch Prediction i.e weekly, monthly (High throughout)
+     vs
+   online prediction (low latency)
+b. Assumptions
+c. Translate abstract problem to ML problem
+   1. ML Objective, ML I/O, ML Category(binary classification, multi-classification, supervised, unsupervised learning etc)
+d. NFR -
+   Reliability -  ML system fails, may not give an error, give garbage outputs
+   Scalability - Ask questions about the scale of the system - how many users, how much content?
+   Maintainability: data distribution might get changed, how to re-train and update the model
+   Adaptability: new data with added features, changes in business objectives, should be flexible
+
+Step 2 - Metrics :
+----------------
+Offline Metrics
+Classification Metrics -
+    a. ROC, AUC, Precision, Recall
+    ROC (Receiver-operating characteristic curve)The ROC curve is the plot of the true positive rate (TPR) against the false positive rate (FPR) at each threshold setting.
+    AUC - (Area under the curve) - Represents area under ROC curve. Higher the AUC better the model
+    A higher AUC value indicates better model performance as it suggests a greater ability to distinguish between classes
+    F1 - mean of ROC and AUC
+    CE (Cross Entrophy) - probabalistic difference between true and predicted distributions
+    NCE - It divides the standard cross-entropy loss by an average log loss that would be achieved if the model predicted a baseline click-through rate (CTR) for all impressions.
+    NCE IS used for ad prediction systems when click rates vary
+Info Retrieval and recommendation Metrics :
+    precision @k = number of relevant items among top k /  number of recommended items. It measures the system's ability to provide relevant content at the top of the list.
+    recall @ k =number of relevant items among top k / number of all relevant items in the system
+    Precision - Precision is the fraction of the documents retrieved that are relevant to the user's information need
+    "Precision at 10" corresponds to the number of relevant results among the top 10 retrieved documents
+    Recall - Recall is the fraction of the documents that are relevant to the query that are successfully retrieved.
+
+Ranking metrics or Recommendations Metrics :
+    MAP @ K (relevance is binary) - Mean average precision -  average precision across multiple queries or users. overall quality of recommendations or search results across a diverse set of queries
+    DCG - DCG quantifies the quality of a ranked list of items or search results by considering relevance and position
+    Normalized DCG - Discounted cumulative gain - How well the model orders items by relevance. fraction of DCG over the Ideal DCG.
+     nDCG is beneficial when relevance is not binary
+   MRR(Mean reciprocal rank) - effectiveness of a system in ranking the most relevant items at the top of a list
+   calculates the average of reciprocal ranks of the first correct item found
+   MRR is often used in search and recommendation systems to assess how quickly users find relevant content
+
+
+Regression metrics - MSE, MAE
+Problem specific metrics - BLEU, BLEURT, ROUGE etc
+    BLEU (BiLingual Evaluation Understudy) :  count the ratio of matches, with brevity penalty, n-grams precision, weight for different n-gram precisions
+    ROUGE (Recall-Oriented Understudy for Gisting Evaluation): recall = # matching n-grams / total # n-grams in reference. Lack of contextual understanding.
+
+Online Metrics :
+CTR (Click through rate) - Number of Clicks/Number of Impressions ×100%
+Task/session success/failure rate,
+Task/session total (e.g. watch) times,
+Engagement rate (like rate, comment rate)
+Conversion rate
+Revenue lift
+Reciprocal rank of first click, etc,
+Counter metrics: direct negative feedback (hide, report)
+Bounce Rate - moving away
+
+STEP 3 - Architectural components
+High level architecture and main components
+Non-ML components:
+user, app server, DBs, KGs, etc and their interactions
+ML components:
+Modeling modules (e.g. candidate generator, ranker, ect)
+Train data generator
+Modular architecture design
+Model 1 architecture (e.g. candidate generation)
+Model 2 architecture (e.g. ranker, filter)
+
+
+STEP 4 - Data collection and preparation
+a. Data needs  - target variable, type of data
+b. data sources - availability and cost, storage
+c. Data types - structured (numerical, categorical) , unstructured
+d. Labelling (supervised)
+e. data augmentation
+f. data generation pipeline - data collection ingestion, feature generation, feature transform, label generation, joiner
+g. Handling missing data
+    Imputation - replace missing data with estimated. eg : Mean/Median/Mode Imputation, Regression imputation, K nearest imputation
+h. Handling outliers
+    Standard deviation, variance removal
+g. Feature crossing
+
+STEP 5 - Feature Engineering - Feature importance will tell you which of these features have the most weight in your model
+a. Choosing features
+     1. Define big actors - user, item , document, context, query, ad
+     2. Define actor specific features - user profile, user history, interests
+     3. Define cross features - TF - IDF
+b. Feature representation
+     1. One hot encoding(cat to binary indicator), binning (continuous to discrete bins) , text data to vectos
+     2. Embeddings (for text, image, graphs)
+     3. Encoding categorical features
+     4. Scaling/ Normalization (for numerical features) - scaling with in the range
+        Standardization - Calculating z score z = xi - mean/ Standard deviation. The score is distributed between -1 to +1
+     5. Preprocessing unstructured data for Text (Tokenize), images (resize, normalize), video (decode frames, sample, resize, scale)
+     6. Quantile binning
+c. Missing values - Perform imputation
+d. Feature importance - Feature importance will tell you which of these features have the most weight in your model
+    Shuffling (PFI) - Permutation feature importance involves shuffling the values of each feature and measuring the decrease in model performance
+    Tree Based Importance - calculate feature importance based on the reduction in a criterion (e.g., Gini impurity or entropy) used to select split points.
+    Pearson Correlation Coefficient - coefficient based feature importance refers to models which generate predictions as a weighted sum of the input values.
+    Only applicable to linear models such as linear regression, logistic regression
+
+    Issues with traditional models -
+     a. High bias as high cardinality features such as ID can lead to more important features
+     b. PFI is also badly suited for models that are trained with correlated features,
+     c. The main difference is that permutation importance is based on the decrease in model performance, while SHAP importance is based on magnitude of feature attributions.
+
+    SHAP Method -
+    a. Shapley value calculates a feature’s contribution by considering all possible combinations of features.
+    b. SHAP values allow you to explain not just the overall importance of a feature (like traditional methods) but also how that feature impacts each individual prediction.
+    c. If two features are working together to influence a prediction, SHAP values capture this
+    d. Provides local and global interpretability i.e customer A is likely to churn in addition to why a feature is important to all customers
+    e. model agnostic
+    Tradeoff - SHAP is computational intensive and use only if we need individual prediction explanation else can use regular feature imp techniques
+
+    The PFI method explains which features drive the model’s performance (e.g. RMSE) while methods such as LIME and SHAP explain which features played a more important role in generating a prediction.
+
+e. Dimensionality reduction/Embedding
+    PCA for dimensionality reduction
+    Standardize data, perform covariance analysis i.e checking they increase/decrease together, finds principal components which direction of max variance
+    Eigenvalues are scalar values that represent the magnitude of the variance explained by each principal component.
+    They quantify the amount of information captured by a particular direction in the data. The corresponding eigenvectors are vectors that define those directions of maximum variance. In essence, eigenvectors are the new axes that represent the data most effectively.
+    Steps :
+    Computing the Covariance Matrix: The covariance matrix of the dataset is calculated.
+    Eigen Decomposition: The eigenvalues and eigenvectors of the covariance matrix are computed.
+    Selecting Principal Components: The eigenvectors corresponding to the largest eigenvalues are selected as the principal components.
+    Projecting the Data: The original data is projected onto the new coordinate system defined by the principal components.
+    Pros :
+     a. Noise Reduction: Eliminates components with low variance enhance data clarity.
+     b. Data Compression: Represents data with fewer components reduce storage needs and speeding up processing.
+     c. Outlier Detection: Identifies unusual data points by showing which ones deviate significantly in the reduced space.
+    Cons:
+      a. Interpretation Challenges: The new components are combinations of original variables which can be hard to explain.
+      b. Data Scaling Sensitivity: Requires proper scaling of data before application or results may be misleading.
+      c. Risk of Overfitting: Using too many components or working with a small dataset might lead to models that don't generalize well.
+      d. Information Loss: Reducing dimensions may lose some important information if too few components are kept.
+
+
+f. Text PreProcessing and Embedding
+    Normalization, Tokenization, Tokens to IDs
+    Bag of Words, Count Vectorizer, TF-IDF - evaluates the importance of a word (term) in a document relative to a collection of documents
+    Encoders/Embedding -  trainable layer that converts categorical inputs, such as words or IDs, into continuous-valued vectors
+    BERT, word2vec (skip-gram, cbow)
+    CBOW (Continuous bag of words)  - In CBOW, the model predicts a target word based on the context words (words that surround it) within a fixed window.
+    Works with small dataset
+    Skipgram - It learns to capture the relationships between the target word and its context words. Works with large datasets
+    transformer based e.g. BERT: - consider context, different embeddings for same words in different context
+
+
+e. Image/Video Preprocessing and Embedding
+    Resizing
+    Normalization
+    Color Space Transformation
+    Video: Video Encoding, Frame Encoding *(*Frame Decoding, Frame Sampling)
+    VGG, ResNet, ViT, CLIP - Encodes video and text in the same space
+
+
+STEP 6 - Model development and offline evaluation
+Model Selection -
+a. Heuristics -> simple model -> more complex model -> ensemble of models
+Pros and cons, and decision
+Note: Always start as simple as possible (KISS) and iterate over
+b. Modelling choices
+   1. Logistic Regression
+   2. Decision tree variants
+   3. NN (CNN, RNN, Transformers)
+     CNN - Convolutional neural net is suited for image
+     RNN -  RNNs feed information back into the network at each step and peforms well for sequential data that needs memory
+            LSTM RNN - introduce a memory mechanism to overcome the vanishing gradient problem.
+            Applications - Time-Series Prediction, Speech Recognition, Image and Video Processing
+            Limitations -
+            Vanishing Gradient (can be reduced by Relu/LSTM) : During backpropagation gradients diminish as they pass through each time step leading to minimal weight updates. This limits the RNN’s ability to learn long-term dependencies which is crucial for tasks like language translation.
+            Exploding Gradient: Sometimes gradients grow uncontrollably causing excessively large weight updates that de-stabilize training.
+            Can be solved by Gradient Clipping, Batch Normalization
+c. Dataset - tran, test dataset split, probabilistic sampling methods
+d. Model training
+   1. Loss functions - MSE, Huber Loss, Hinge Loss
+      a. Regression Models
+       i.  Mean Squared Error - average of squared differences between the actual value (Y) and the predicted value (Ŷ).
+       ii. Mean Absolute Error - calculates the mean of the absolute values of the residuals for all datapoints in the dataset
+       iii. Mean Bias Error - it can help in determining whether the model has a positive bias or negative bias
+       iv. Huber Loss - The Huber loss function uses a quadratic penalty (like MSE) for errors smaller than δ (delta), and a linear penalty (like MAE) for errors larger than δ.
+      b. Classification
+           i. Cross-Entropy Loss (Log Loss) - This loss function measures how well the predicted probabilities match the actual labels.
+           ii. Kullback-Leibler Divergence - a widely used loss function in machine learning(NN) that measures how one probability distribution differs from a reference probability distribution.
+           iii. Hinge Loss - Used in SVM - Hinge loss penalizes the wrong predictions and the right predictions that are not confident.
+   2. Optimizers - SGD, Adam, RMSProp
+       So essentially, optimization is a process of finding optimal parameters for the model, which significantly reduces the error function.
+       minimizes loss function
+       SGD -
+       Momentum - Imagine we have computed gradients on every iteration like in the picture above. Instead of simply using them for updating weights, we take several past values and perform update in the averaged direction.
+       EMA - EMA smoothes the graph and reduces the oscillations.
+       AdaGrad - AdaGrad uses the sum of squared previous gradients to combat this issue. If the gradient is high, then the learning rate is reduced. And if the gradient is low, then it’s increased.
+       In this way, the algorithm adapts the size of the steps smoothly along all dimensions.
+       Pros:
+        adaptive learning rate to the parameters
+        no manual tuning of learning rate
+        Cons:
+        learning rate disappears
+       RMSProp - RMSprop uses an adaptive learning rate instead of treating the learning rate as a hyperparameter. This means that the learning rate changes over time.
+       Adam -  Essentially Adam is a combination of Momentum and RMSProp. It has reduced oscillation, a more smoothed path, and adaptive learning rate capabilities.
+   3. Offline vs online training
+   4. Iterate over MVP model
+        Model Selection
+        Data augmentation
+        Model update frequency
+   5. Model evaluation and tuning :
+         1. Regularization  -
+        Regularization is a technique used in machine learning to prevent overfitting and performs poorly on unseen data. By adding a penalty for complexity, regularization encourages simpler, more generalizable models.
+        model regularization - mitigate overfitting
+       - Both L2 regularization and L1 regularization prevent overfitting in machine learning models by applying penalty weights on values.
+        This prevents models from putting too much importance on specific features, which encourages a more balanced weight distribution across all features and a generalized, less complex model.
+       - L1 - lasso (“least absolute shrinkage and selection operator”) regression, is a regularization method that penalizes high-value coefficients in a machine learning model
+               Adds the absolute value of the sum (“absolute value of magnitude”) of coefficients as a penalty term to the loss function.
+       - L2 -  Also called a ridge regression, adds the squared sum (“squared magnitude”) of coefficients as the penalty term to the loss function.
+       - L1 regularization is most effective for enabling feature selection and maintaining model interpretability, while L2 regularization is effective for handling multicollinearity and prioritizing model accuracy and stability
+        2. Cross-validation is a technique used to check how well a machine learning model performs on unseen data while preventing overfitting. It works by:
+            Splitting the dataset into several parts.
+            Training the model on some parts and testing it on the remaining part.
+            Repeating this resampling process multiple times by choosing different parts of the dataset.
+            Averaging the results from each validation step to get the final performance.
+        3. Hyperparameter Tuning (eg.learning rates, weights)
+            A high learning rate can cause the model to converge too quickly possibly skipping over the optimal solution.
+            A low learning rate might lead to slower convergence and require more time and computational resources.
+            Bayesian optimization -
+            Build a probabilistic model (surrogate function) that predicts performance based on hyperparameters.
+            Update this model after each evaluation.
+            Use the model to choose the next best set to try.
+            Repeat until the optimal combination is found. The surrogate function models:
+        4. OverFitting
+           a. OverFitting - Overfitting happens when a model learns too much from the training data, including details that don’t matter (like noise or outliers).
+           b. High variance and low bias, model too complex
+           c. To remove overfitting - improve quality of training data, reduce model complexity, regularization, increase training data
+        5. UnderFitting -  It happens when a model is too simple to capture what’s going on in the data.
+           a. High bias and low variance
+           b. Model is too simple, size of training data is low
+           c. To fix underfitting : increase model complexity, increase features, remove noise, increase epochs
+        6. Bias Variance tradeoff
+           a.
+
+        7. Loss functions - They provide a measure of how well the model's predictions align with the actual data
+           Refer : https://builtin.com/machine-learning/common-loss-functions
+           a. Regression Models
+               i.  Mean Squared Error - average of squared differences between the actual value (Y) and the predicted value (Ŷ).
+               ii. Mean Absolute Error - calculates the mean of the absolute values of the residuals for all datapoints in the dataset
+               iii. Mean Bias Error - it can help in determining whether the model has a positive bias or negative bias
+               iv. Huber Loss - The Huber loss function uses a quadratic penalty (like MSE) for errors smaller than δ (delta), and a linear penalty (like MAE) for errors larger than δ.
+          b. Classification
+               i. Cross-Entropy Loss (Log Loss) - This loss function measures how well the predicted probabilities match the actual labels.
+               ii. Kullback-Leibler Divergence - a widely used loss function in machine learning(NN) that measures how one probability distribution differs from a reference probability distribution.
+               iii. Hinge Loss - Used in SVM - Hinge loss penalizes the wrong predictions and the right predictions that are not confident.
+
+
+STEP 7 - Prediction Service
+a. Data processing and verification
+    Batch vs Online prediction
+    Batch - periodic, pre computed high throughput
+    Stream - predict as request arrives low latency
+    hybrid eg : netflix : batch for title, and real time for rows
+b. Nearest neighbour service
+   1. Approximate NN, Tree based, Clustering based
+c. ML on the edge
+    Network connection/latency, privacy, cheap
+    Memory, compute power, energy constraints
+    Model compression techniques :
+    Quantization - Quantization is a technique to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the usual 32-bit floating point (float32).
+    Pruning
+    Knowledge distillation - Used to optimize AI models for deployment in resource-constrained environments, such as mobile devices, embedded systems, or any platform where computational efficiency is a priority.
+                             Suitable for scenarios where large models would be impractical due to their size and computational demands, such as real-time applications or large-scale industrial deployments.
+    Steps for distillation : https://medium.com/stream-zero/understanding-the-essentials-of-model-distillation-in-ai-1e97403bee8a
+    Step 1 - Parent model is trained which is computational intensive
+    Step 2 - Prent models output which is logits are used as soft targets. soft targets contain detailed info about models predictions
+    Step 3 - The student model is trained not just to replicate the final predictions of the teacher model but to align its output distributions (soft targets) with those of the teacher.
+             This often involves using a loss function like the Kullback-Leibler divergence, which measures how one probability distribution diverges from a second, expected probability distribution.
+    Step 4 - During training, a technique called temperature scaling is applied to modify the softmax outputs of the teacher model, making the probabilities more uniform and thus easier for the student to learn from.
+    Factorization
+
+
+STEP 8 - Online testing and deployment
+a. A/B Experiments
+    How to A/B test?
+    what portion of users?
+    control and test groups
+    null hypothesis
+    Bandits
+b. Canary release
+c. Model compression using distillation, precision reduce to INT8
+d. Batch Prediction Vs Online
+    1. Online Prediction - Requests are sent to REST API
+    Require a (near) real-time pipeline that can work with incoming data, extract streaming features, return prediction in near real-time.
+    Fast-inference model that can generate predictions at a speed acceptable to its end users
+    2. Batch prediction: predictions are generated periodically or whatever triggered.
+    3. Unifying batch and stream processing pipelines with Flink
+
+STEP 9 - Scaling, Monitoring and Updates
+Operations: Throughput, Latency, # of Requests
+Alerts :
+ML Specific:
+a. Data Drift [Covariate Shift/Feature Drift, Prior Probability Shift/Label Drift, Concept Drift] → Histogram Testing and Data Visualization
+b. Model Drift → perfomance degradation → train periodically check feature importance
+c. Seasonality → Timely pattern shifts that require model changes
+Scalability - Data and model parallelism, data partition
+TradeOff's :
+1. Cold Starts - Until we get the data use other features such as user profile, demographaphics, similar users, popular items etc
+2. Popularity bias - use inverse popularity weighting to reduce influence of popular items. For instance, instead of directly using interaction counts, apply a logarithmic transformation or normalize scores to dampen the dominance of top items.
+3. Novelty effect - The novelty effect refers to temporary changes in user behavior simply because something is new. Identify outliers, Segment user cohorts etc
+4. Exploration exploitation trade-off :
+Multi-armed bandit (an agent repeatedly selects an option and receives a reward/cost. The goal of to maximize its cumulative reward over time, while simultaneously learning which options are most valuable.)
+
+Infra :
+Training
+MLFlow, Airflow, Kubeflow
+Sagemaker, Google Cloud AI Platform
+
+Deploying :
+Github Actions, Jenkins
+
+Serving :
+KServe, Sagemaker, Nvidia Triton
+
+Maintaining & Monitoring
+Prometheus, Grafana
+
+Continual Learning :
+Versioning & Model Registry
+Caching
+
+
+Serving patterns :
+1. Preprocess-prediction pattern
+ Seperate pipeline for preprocess and prediction
+
+
+Training patterns :
+1. Batch training patterns
+2. Parameter and architecture search pattern -
+
+Operation patterns :
+1. Model load pattern - While productionizing an ml service on a cloud platform (or on containers) becomes a common practice, it is still an important consideration to manage and version machine learning model along with its server image.
+ By building server (or container image) and model file separately, you may be able to decouple the management of the model and the server.
+ Deploy the prediction service that loads the model file
+2. Prediction log pattern
+   It is mandatory to collect log to analyze and improve your service. The log may include prediction result along with input, latency, client event, and related activities.
+3. Prediction monitoring pattern
+    It is mandatory to take log and monitor infrastructure and application to operate the production service. It may be good to monitor prediction results as well, especially for a production system with service level to the model.
+    In the prediction monitoring pattern, you will give monitor the inferences. There are multiple cases that the inference result may be suspicious.
+    1. When there is no inference for a target for a certain length of time, or when there is too many of them that should be rare. E.g. Too many anomalies detected on anomaly detection.
+    2. When there is too less, or too many, request compared to usual. E.g. 1000 requests per second happening on 100 rps expected service. E.g. No request for long in web service.
+    3. Continuous requests on a same input data. E.g. Retry occurring continuously for a certain input, or DDOS attack.
+4. Prediction circuit break pattern

@@ -1,0 +1,62 @@
+Sys design :
+http://patrickhalina.com/posts/ml-systems-design-interview-guide/#leveling
+Sys Design Cheat sheet :
+https://medium.com/analytics-vidhya/machine-learning-system-design-interview-cheat-sheet-part-1-bc3bc74eb16e
+
+ML Theory :
+Gradient descent vs Stochastic gradient descent
+Optimization algm for large datasets
+SGD -
+calculates the gradient of the cost function for a random sample of single training example and updates the model’s parameters according to that gradient.
+Pros
+GD - Use individual training examples like SGD, it calculates the average gradient of the cost function for the entire dataset.
+Thismeans that each iteration of the algorithm involves updating the model’s parameters based on the average gradient over all the training examples.
+Differences :
+SGD is fast as it requires only one training example whereas GD requires entire dataset
+SGD is noisy as it takes random sample
+GD takes more memory as it stores the entire dataset
+SGD is less accurate as it calculates gradiant on single example whereas GD takes average of entire dataset
+SGD is used for larger datasets such as LLM whereas GD is used for smaller datasets
+
+Optimizer :
+ One of the most common algorithms performed during training is backpropagation consisting of changing weights of a neural network in respect to a given loss function. Backpropagation is usually performed via gradient descent which tries to converge loss function to a local minimum step by step.
+
+
+Classification:
+1. Binary Classification - to sort the data into two distinct categories.
+    Linear regression - predict continuous values by best fti between input and o/p
+    Logistic regression - predicts probabilities and assigns data points to binary classes
+    Decision tree - Used for classification and regression
+2. Multiclass classification - to sort the data into more than 2 categories that are mutually exclusive eg. image classification
+3. MultiLabel classification
+
+Multi-task Learning :
+Multi-task learning (MTL) is a model training technique where you train a single deep neural network on multiple tasks at the same time
+MTL refers to training a neural network to perform multiple tasks by sharing some of the network's layers and parameters across tasks.
+In MTL, the goal is to improve the generalization performance of the model by leveraging the information shared across tasks. By sharing some of the network's parameters, the model can learn a more efficient and compact representation of the data, which can be beneficial when the tasks are related or have some commonalities.
+Use :
+Object detection and Facial recognition
+Self Driving Cars: Pedestrians, stop signs and other obstacles can be detected together
+Multi-domain collaborative filtering for web applications
+Stock Prediction
+Language Modelling and other NLP applications
+
+
+Ranking algorithms :
+https://towardsdatascience.com/what-is-learning-to-rank-a-beginners-guide-to-learning-to-rank-methods-23bbb99ef38c/
+
+Cold Start problem: (Ref : https://spotintelligence.com/2024/02/08/cold-start-problem-machine-learning/)
+Happens in recommendatio system When new users come, data is sparse
+Mitigation:
+1. Use Content-Based Recommendations
+    Utilize item features and attributes (such as text descriptions, tags, or metadata) to make recommendations.
+2. Popularity-Based Recommendations until sufficient data comes in
+3. Context aware recomms such as history, demographics etc
+4. Active Learning and Exploration . Get feedback from users
+
+
+Factorization Machine for a recommendation system :
+It handles Sparse and High Dimensional data comparatively well.
+it can model X-way variable interactions, where
+X is the number of polynomial order and is usually set to two
+You can add meta information around the user & item for more context. Hence, Factorization Machine isn’t a Pure Collaborative Filtering method like NCF and Matrix Factorization that only uses user-item interaction.
