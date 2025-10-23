@@ -1,0 +1,136 @@
+Resources :
+https://medium.com/@jagadeesan.ganesh/mastering-llm-ai-agents-building-and-using-ai-agents-in-python-with-real-world-use-cases-c578eb640e35
+
+Lifecycle Management & MLOps Integration
+=======================================
+Model Versioning & Registries:
+a. Manage and version reasoning and generation models with MLflow or SageMaker Model Registry, ensuring reproducibility and easy rollbacks.
+
+CI/CD Pipelines:
+a. Automate embedding updates, memory schema migrations, and model deployments.
+b. Run unit and integration tests on each commit, and deploy verified models to production through a CI/CD pipeline.
+
+Continuous Data & Pipeline Management:
+Regularly validate and clean memory entries, refresh vector indexes, and ensure data quality as memory grows.
+Incorporate DataOps best practices to maintain consistent performance as usage scales.
+
+
+LLM Vs RAG
+===========
+An LLM should use RAG to provide up-to-date information from a user’s input, whether that’s related to a customer, an employee, or the business more broadly. And an LLM should use MCP when a user wants to perform actions inside of an application, such as creating a ticket, sending an email to a new hire, or updating a customer’s account information.
+
+Put simply: RAG is best suited for enterprise AI search while MCP should support agentic AI use cases.
+
+When Should You Use RAG?
+RAG is likely your best bet when:
+a.bYour main goal is to answer questions or generate content based on a large, existing body of knowledge (e.g., company policies, technical manuals).
+b. Factual accuracy and grounding in specific source documents are critical.
+c. You need to reduce LLM hallucinations and provide up-to-date information from relatively stable sources.
+d. You're building search applications over private document collections.
+e. The LLM primarily needs to know more to give better answers.
+
+When Should You Use MCP?
+MCP is the way to go when:
+a. Your main goal is for the LLM to perform actions or interact with external systems (e.g., create a support ticket, send an email, update a CRM).
+b. The LLM needs to access highly dynamic, real-time data (e.g., current stock prices, live flight statuses).
+c. You're building AI agents that need to use various tools to complete multi-step tasks.
+d. You want to standardize how multiple LLMs or AI apps connect to a common set of enterprise tools.
+e. The LLM primarily needs to do more or access live, rapidly changing information.
+
+
+
+
+LLM Agents :
+LLM AI agents are AI entities powered by LLM's. Understands natural language instructions, interact dynamically
+and peforms tasks
+a. Contextual undestanding
+b. Tool integration
+c. Autonomous task execution
+d. Multi-agent collaboration
+
+LLM Agent Stages
+================
+1. Prompt - Prompts are instructions that give information to LLM about its objective
+2. Planning - Complex problems often need a chain-of-thought approaches. Therefore agents must forms a plan through its reasoning capabilities.
+3. Tools - Executable functions, APIs or other services that allow agents to complete their duties and interact with their environment.
+4. Knowledge - Without the knowledge of the field, agent can not solve or even understand the task. So either the LLM must be fine-tuned to have the knowledge or we can create a tool to extract the knowledge from a database.
+5. Memory - As we know, agents complete a complex task by first breaking down into sub-tasks than executing tools to finish sub-tasks. For this, the model needs to remember its previous steps.
+
+
+
+
+RAG Design :
+1. Prompt -> LLM -> Question -> Embedding model ->   Vector -> Similarity Search -> Vector DB -> similar passages
+
+3 Stages :
+Retrieval: a component called retriever accesses the vector database to find and retrieve relevant documents to the user query.
+Augmentation: the original user query is augmented by incorporating contextual knowledge from the retrieved documents.
+Generation: the LLM -also commonly referred to as generator from an RAG viewpoint- receives the user query augmented with relevant contextual information and generates a more precise and truthful text response.
+
+Data Flow
+========
+1. Incoming Query: A user query hits the Orchestration Layer.
+2. Dual Retrieval: The system queries both the Retrieval Module (for static knowledge) and the Memory Module (for historical/contextual data).
+3. Combine Results: The Reasoning Module merges static knowledge and memory-based data to form a rich context.
+4. Contextual Generation: The Generation Module produces an output guided by both retrieved documents and memory context.
+5. Memory Update: After producing a response, the system updates the Memory Module with new interaction details (session summaries, user feedback, etc.).
+6. Response Delivery: The final, context-enriched answer is returned to the user.
+
+
+LLM Agent advanced fine tuning :
+a. Memory Management for Context Retention
+One of the key limitations of traditional LLMs is their lack of memory persistence across different interactions.
+To build more sophisticated AI agents that can recall past information, incorporate memory management techniques. This could include:
+
+Memory :
+a. Short term memory :
+b. Long term memory
+c. Working Memory
+
+Challenges :
+1. Data Security
+2. Scalability
+3. Monitoring - Integrate monitoring tools like Prometheus-–these track system
+    Using ML Flow,
+4. Accuracy - Hallucination
+
+
+
+
+Memory optimization :
+1. Context pruning - trimming irrelevant or invalid data
+2. Summarizing and storing them
+    combined_input = (
+    "Here are some documents that might help answer the question: "
+    + "\n\n".join([doc.page_content for doc in relevant_docs])
+    + "\n\nPlease summarize the content in no more than 4 lines."
+)
+3. Maintaining TTL
+
+Managing context length :
+Document Chunking - Splits documents into smaller, coherent chunks to preserve context while reducing redundancy
+Selective Retrieval - Filters large sets of relevant documents to retrieve only the most pertinent parts,
+Targeted Retrieval - Optimizes retrieval for specific query intents using specialized retrievers
+Context Summarization - Uses extractive or abstractive summarization techniques to condense large amounts of retrieved content,
+
+Fine Tuning
+==========
+1. Response Latency
+    a. LLM model - Larger models means more power but more time
+    b. Inference speed - faster token processing is crucial. Reduce token processing time.
+       (i) Generate few tokens. Request concise responses to limit output length
+       (ii) Use fewer input tokens - Use techniques like fine-tuning or context filtering to manage large inputs.
+       (iii) Combine multiple steps to singe prompt to avoid round trip latency
+       (iv) Execute independent tasks parallel.
+       (v) Use chunking, streaming, and progress indicators
+       (vi) Use caching and pre-computer
+
+2. Retrieval Latency
+    a. Larger Clusters with More Nodes - Allows distributed workload, indexing and searching
+    b. Memory sizing - vector database index stores vector embeddings and enables fast similarity searches. As data grows, the index size increases.
+        Each node has limited RAM. If the index exceeds available memory, the system relies on slower disk storage.
+    c. Avoid page defaults if index exceeds memory
+
+
+
+P

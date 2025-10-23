@@ -1,0 +1,151 @@
+ML System design
+=================
+
+Step 1	Problem Formulation
+Step 2	Metrics (Offline and Online)
+Step 3	Architectural Components (MVP Logic)
+Step 4	Data Collection and Preparation
+Step 5	Feature Engineering
+Step 6	Model Development and Offline Evaluation
+Step 7	Prediction Service
+Step 8	Online Testing and Deployment
+Step 9	Scaling, Monitoring, and Updates
+
+Step 1  - Problem formulation -
+a. Clarifying questions on Requirements
+    Scope (features needed), scale, and personalization
+    Performance: prediction latency, scale of prediction
+    Constraints
+    Data: sources and availability
+b. Assumptions
+c. Translate abstract problem to ML problem
+   1. ML Objective, ML I/O, ML Category(binary classification, multi-classification, supervised, unsupervised learning etc)
+
+Step 2 - Metrics :
+Offline Metrics
+Classification Metrics -
+    a. ROC, AUC, Precision, Recall
+    ROC (Receiver-operating characteristic curve)The ROC curve is the plot of the true positive rate (TPR) against the false positive rate (FPR) at each threshold setting.
+    AUC - (Area under the curve) - Represents area under ROC curve. Higher the AUC better the model
+    A higher AUC value indicates better model performance as it suggests a greater ability to distinguish between classes
+
+Retrieval and ranking metrics - Precision@k, Recall@
+precision @k = number of relevant items among top k /  number of recommended items
+recall @ k =number of relevant items among top k / number of all relevant items in the system
+Precision - Precision is the fraction of the documents retrieved that are relevant to the user's information need
+"Precision at 10" corresponds to the number of relevant results among the top 10 retrieved documents
+Recall - Recall is the fraction of the documents that are relevant to the query that are successfully retrieved.
+Ranking metrics
+    MAP @ K - Mean average precision
+    DCG - Discounted cumulative gain
+
+Regression metrics - MSE, MAE
+Problem specific metrics - BLEU, BLEURT etc
+
+Online Metrics :
+CTR
+Task/session success/failure rate,
+Task/session total (e.g. watch) times,
+Engagement rate (like rate, comment rate)
+Conversion rate
+Revenue lift
+Reciprocal rank of first click, etc,
+Counter metrics: direct negative feedback (hide, report)
+
+
+STEP 3 - Architectural components
+High level architecture and main components
+Non-ML components:
+user, app server, DBs, KGs, etc and their interactions
+ML components:
+Modeling modules (e.g. candidate generator, ranker, ect)
+Train data generator
+...
+Modular architecture design
+Model 1 architecture (e.g. candidate generation)
+Model 2 architecture (e.g. ranker, filter)
+
+
+STEP 4 - Data collection and preparation
+a. Data needs  - target variable, type of data
+b. data sources - availability and cost, storage
+c. Data types - structured (numerical, categorical) , unstructured
+d. Labelling (supervised)
+e. data augmentation
+f. data generation pipeline - data collection ingestion, feature generation, feature transform, label generation, joiner
+
+STEP 5 - Feature Engineering
+a. Choosing features
+     1. Define big actors - user, item , document, context, query, ad
+     2. Define actor specific features - user profile, user history, interests
+     3. Define cross features - TF - IDF
+b. Feature representation
+     1. One hot encoding
+     2. Embeddings (for text, image, graphs)
+     3. Encoding categorical features
+     4. Scaling/ Normalization (for numerical features)
+     5. Preprocessing unstructured data for Text (Tokenize), images (resize, normalize), video (decode frames, sample, resize, scale)
+c. Missing values
+d. Feature importance
+
+STEP 6 - Model development and offline evaluation
+Model Selection -
+a. Heuristics -> simple model -> more complex model -> ensemble of models
+Pros and cons, and decision
+Note: Always start as simple as possible (KISS) and iterate over
+b. Modelling choices
+   1. Logistic Regression
+   2. Decision tree variants
+   3. NN (CNN, RNN, Transformers)
+c. Dataset - tran, test dataset split, probabilistic sampling methods
+d. Model training
+   1. Loss functions - MSE, Huber Loss, Hinge Loss
+   2. Optimizers - SGD, Adam, RMSProp
+   3. Offline vs online training
+   4. Hyper parameter tuning
+   5. Iterate over MVP model
+        Model Selection
+        Data augmentation
+        Model update frequency
+   6. Model calibration
+
+
+STEP 7 - Prediction Service
+a. Data processing and verification
+    Batch vs Online prediction
+    Batch - periodic, pre computed high throughput
+    Stream - predict as request arrives low latency
+    hybrid eg : netflix : batch for title, and real time for rows
+b. Nearest neighbour service
+   1. Approximate NN, Tree based, Clustering based
+c. ML on the edge
+    Network connection/latency, privacy, cheap
+    Memory, compute power, energy constraints
+    Model compression techniques :
+    Quantization - Quantization is a technique to reduce the computational and memory costs of running inference by representing the weights and activations with low-precision data types like 8-bit integer (int8) instead of the usual 32-bit floating point (float32).
+    Pruning
+    Knowledge distillation - Used to optimize AI models for deployment in resource-constrained environments, such as mobile devices, embedded systems, or any platform where computational efficiency is a priority.
+                             Suitable for scenarios where large models would be impractical due to their size and computational demands, such as real-time applications or large-scale industrial deployments.
+    Steps for distillation : https://medium.com/stream-zero/understanding-the-essentials-of-model-distillation-in-ai-1e97403bee8a
+    Step 1 - Parent model is trained which is computational intensive
+    Step 2 - Prent models output which is logits are used as soft targets. soft targets contain detailed info about models predictions
+    Step 3 - The student model is trained not just to replicate the final predictions of the teacher model but to align its output distributions (soft targets) with those of the teacher.
+             This often involves using a loss function like the Kullback-Leibler divergence, which measures how one probability distribution diverges from a second, expected probability distribution.
+    Step 4 - During training, a technique called temperature scaling is applied to modify the softmax outputs of the teacher model, making the probabilities more uniform and thus easier for the student to learn from.
+    Factorization
+
+
+STEP 8 - Online testing and deployment
+a. A/B Experiments
+    How to A/B test?
+    what portion of users?
+    control and test groups
+    null hypothesis
+    Bandits
+b. Canary release
+
+STEP 9 - Scaling, Monitoring and Updates
+
+
+
+

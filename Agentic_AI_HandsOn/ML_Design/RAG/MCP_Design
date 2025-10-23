@@ -1,0 +1,56 @@
+MCP
+=====
+The Model Context Protocol (MCP) is an open, standardized interface that allows Large Language Models (LLMs) to interact seamlessly with external tools, APIs, and data sources.
+
+MCP follows a client-server model, where:
+
+MCP Hosts run the AI models
+MCP Clients initiate requests
+MCP Servers serve context, tools, and capabilities
+
+MCP servers operate in the following way:
+
+Request Flow:
+A request is initiated by an end user or software acting on their behalf.
+The MCP Client sends the request to an MCP Host, which manages the AI Model runtime.
+The AI Model receives the user prompt and may request access to external tools or data via one or more tool calls.
+The MCP Host, not the model directly, communicates with the appropriate MCP Server(s) using the standardized protocol.
+MCP Host Functionality:
+Tool Registry: Maintains a catalog of available tools and their capabilities.
+Authentication: Verifies permissions for tool access.
+Request Handler: Processes incoming tool requests from the model.
+Response Formatter: Structures tool outputs in a format the model can understand.
+MCP Server Execution:
+The MCP Host routes tool calls to one or more MCP Servers, each exposing specialized functions (e.g., search, calculations, database queries).
+The MCP Servers perform their respective operations and return results to the MCP Host in a consistent format.
+The MCP Host formats and relays these results to the AI Model.
+Response Completion:
+The AI Model incorporates the tool outputs into a final response.
+The MCP Host sends this response back to the MCP Client, which delivers it to the end user or calling software.
+
+
+MCP Security :
+1. Use OAuth token auth
+    a. MCP Server acts as resource server. MCP client gets the auth server info from resource server
+    b. mcp client requests token from auth server and gets the token
+    c. access resource server with the token
+2. Use RBAC
+
+
+Streamable HTTP:
+================
+Improvements over traditional HTTP+SSE as
+Key Advantages of Streamable HTTP
+Technical Advantages
+Simplified Implementation: Works on standard HTTP servers without special requirements
+Resource Efficiency: Allocates resources on demand, avoiding long-lived connections per client
+Infrastructure Compatibility: Works well with existing web infrastructures (CDNs, load balancers, API gateways)
+Horizontal Scalability: Supports routing requests to different server nodes via message buses
+Progressive Adoption: Service providers can choose implementation complexity based on needs
+Reconnection Support: Enables session recovery for improved reliability
+Business Advantages
+Reduced Operational Costs: Lowers server resource consumption and simplifies deployment architecture
+Enhanced User Experience: Improves experience through real-time feedback and reliable connections
+Broad Applicability: Suitable for everything from simple tools to complex AI interactions
+Scalability: Supports more diverse AI application scenarios
+Developer-Friendly: Lowers the technical barrier to MCP implementation
