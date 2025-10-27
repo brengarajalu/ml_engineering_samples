@@ -1,0 +1,166 @@
+Resources :
+https://github.com/CathyQian/Machine-Learning-System-Design/blob/master/How%20to%20answer%20machine%20learning%20system%20design%20questions.md
+
+https://github.com/zixi-liu/ML-System-Design/tree/main/LLM-Engineering-Handbook
+
+https://github.com/ML-SystemDesign/MLSystemDesign?tab=readme-ov-file
+https://github.com/khangich/machine-learning-interview
+https://github.com/brengarajalu/learn-ai-engineering
+https://ml-cheatsheet.readthedocs.io/en/latest/activation_functions.html
+
+https://www.linkedin.com/posts/meri-nova_5-best-github-repos-to-help-you-pass-ml-and-activity-7248050851674480640-AVVl/
+
+
+
+https://medium.com/analytics-vidhya/machine-learning-system-design-interview-cheat-sheet-part-1-bc3bc74eb16e
+
+1. define problems
+
+What is the goal? Any secondary goal? e.g. for CTR - maximizing the number of clicks is the primary goal. A secondary goal might be the quality of the ads/content
+Output? Think/draw a very simple diagram with input/output line between system backend and ML system
+The scale of the system - how many users, how much content?
+Do we need machine learning? Start with herustic model as baseline, then use ML for better performance. Add complexity to the ML model gradually.
+Machine learning method: supervised or unsupervised? classification or regression or ranking?
+
+2.data availability and collection
+
+what kind of data (system log data, third party data, partner company data) and how much data you need -- both for training and serving?
+are data annotated or not?
+can I utilize weakly supervised or unsupervised method to automatically create new annotated data?
+what data do you need from users? How do you collect it? i.e. user's feedback
+how often does new data come in?
+how big is the data? how is it stored?
+privacy concerns about user data? can I store user data on my servers or can only access data on user's device?
+
+3. data preprocessing
+
+Is there a missing value?
+if missing at random, deletion has no bias effect but decrease the power of analysis by decreasing the effective sample size
+data imputation:
+fill in with simple guess (mean/median, 0, mode or other values)
+nearest neighbor imputation
+multivariant imputation
+use algorithms that can deal with missing values (i.e., xgboost, random forest, lightGBM)
+Is there an unexpected value for one/more data columns? How do you know if its a typo etc. and decide to ignore?
+univariant (IQR, z-score)
+multivariant (model-based automatic outlier detection)
+Is the data balanced? If not do you need to resample the data?
+use AUC/logloss/recall/precision/f1/confusion matrix as evaluation metric
+resample the data
+bagging (bootstrapping with replacement) the minority class
+oversampling (i.e., SMOTE)/ undersampling
+cluster sample (cluster the abundant class, then only use the centroid of the cluster)
+stratified sample(preserve the percentage of samples for each class in each fold)
+modify cost function to penalize error on the minority
+use algorithms that can deal with unbalanced class (i.e., xgboost)
+do you need to normalize data?
+what bias do you have in the data (gender, race, etc)
+
+4.feature engineering
+
+feature construction
+raw data -> features
+how to combine different types of data (texts, numbers, images)?
+different types of data: numerical, categorical, text, image, audio, video
+embedding (PCA, word2vec, zip code encoding, train embedding layer as part of the neural network)
+feature selection
+filter method (univariant or multivariant, based on statistical correlation or variance)
+wrapper method (train a new model for each subset and use the error rate of the model on a hold-out set to evaluate the feature subsets)
+forward selection
+backward elimination
+combination of forward selection and backward elimination
+recursive feature elimination
+embeded method
+tree-based algorithm
+regularization (L1, L2)
+
+5. modeling
+
+model selection: supervised or unsupervised? regression or classification?
+An income prediction task can be regression if we output raw numbers, but if we quantize the income into different brackets and predict the bracket, it becomes a classification problem. Similarly, you can use unsupervised learning to learn labels for your data, then use those labels for supervised learning. Then frame the question into a specific task: object recognition, text classification, time-series analysis, recommender system, dimensionality reduction etc. Keep in mind that there are many ways to frame a problem, and you might not know which way works better until you've tried to train some models.
+
+Start with the simplest solution that can do the job. Simplicity serves two purposes. First, gradually adding more complex components makes it easier to debug step by step. Second, the simplest model serves as a baseline to which you can compare your more complex models.
+
+select baseline model Setting up an appropriate baseline is an important step that many candidates forget. There are three different baselines that you should think about:
+
+Random baseline: if your model just predicts everything at random, what's the expected performance?
+Human baseline: how well would humans perform on this task? - Simple heuristic: for example, for the task of recommending the app to use next on your phone, the simplest model would be to recommend your most frequently used app. If this simple heuristic can predict the next app accurately 70% of the time, any model you build has to outperform it significantly to justify the added complexity.
+
+
+6.training the model
+
+train/val/test set
+pay attention to time-series data and imbalanced data
+avoid data leaking
+loss function for Logistic regression，SVM
+evaluation metrics
+classification: accuracy, AUC, recall/precision/F1,logloss, confusion matrix
+regression: MAE, RMSE
+ranking: MAP(mean average precision), NDCG
+cross-validation vs train/test split (both evaluate the model in the training stage, the former is better)
+bias-varias tradeoff
+overfitting/underfitting
+regularization (L1, L2)
+optimization (gradient descent)
+batch gradient descent (all)
+mini-batch gradient descent (some, most popular)
+stochastic gradient descent (one)
+activation function of neural network (i.e., dead neuron)
+Bayes Theorem
+bagging/boosting
+collaborative filtering
+PCA(Statistical method that uses an orthogonal transformation to convert a set of observations of correlated variables into a set of values of linearly uncorrelated variables called principal components)
+dimensionality reduction (PCA, LDA, partial least squares, t-SNE)
+implement algorithm -- decision tree, K-means
+pros and cons of XGBoost/LightGBM (theoretically(loss function) and practically)
+
+7.hyperparameter tuning
+
+random search, grid search, Bayesian Optimization
+Not all hyperparameters are created equal.
+debug, mostly neural network
+
+Possible problems:
+Theoretical constraints: e.g. wrong assumptions, poor model/data fit.
+Poor model implementation: the more components a model has, the more things that can go wrong, and the harder it is to figure out which goes wrong.
+Snobby training techniques: e.g. call model.train()instead of model.eval() during evaluation.
+Poor choice of hyperparameters: with the same implementation, a set of hyperparameters can give you the state-of-the-art result but another set of hyperparameters might never converge.
+Data problems: mismatched inputs/labels, over-preprocessed data, noisy data, etc.
+Debug method
+start simple and gradually add more components (esp for neural network)
+overfit a single batch
+fix a random seed to guarantee reproducibility
+Feature Importance
+
+partial dependency plot (how the target variable (y) change with the dependent variable(x) giving all other dependent variable fixed; y value represents the average prediction if we force all data points to assume that feature value (x).)
+SHAP values (average of marginal contributions over all permutations; both accurate and consistent. impurity-based (gain) method is biased towards lower splits and high cardinality features)
+scaling
+
+train on multiple machines (CPUs, GPUs, TPUs)
+data parallelism: split your data on multiple machines, train your model on all of them, and accumulate gradients.
+reduce the precision during training (instead of using a full 32 bits to represent a floating point number, use 16 bits)
+
+
+8.serving
+
+In production, serving rather than training is the focus. Some state-of-art algorithms are most times too expensive to compute (computation cost is an important factor to consider in production, most problems don't need fancy algorithms)
+
+how often do you update/retrain model?
+what to do in case of low confidence?
+where to run inferencing, on the user device (hard to collect user feedback) or on the server (increases product latency)?
+interpretability of the model
+potential biases and misuses of your model. Does it propagate any gender and racial biases from the data, and if so, how will you fix it? What happens if someone with malicious intent has access to your system?
+monitoring data drift
+drift type:
+covariate shift: distribution of the input features change while no change in the underlying relationship
+prior probability shift (Distribution of y shift)
+concept shift (Internal relationship between x and y changed)
+upstream data change
+how to detect data drift
+basic statistics (mean/mode, std, min/max)
+statistical distance (population stability index, k-L divergence, K-S statistic, histogram intersection)
+discriminative Distance (Train a model to classify whether the data is from train or test. The better the classifier is, the more different the train and test data is.)
+what to do if there is data drift
+remove drifting feature
+importance reweighting -- upweight training instances similar to the test instances
+retrain model using more recent data

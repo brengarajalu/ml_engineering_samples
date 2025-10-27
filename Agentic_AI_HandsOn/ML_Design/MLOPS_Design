@@ -1,0 +1,93 @@
+MLOPS Design -
+
+1. Feature Store -
+
+
+2. Model or Concept Drift
+“Model drift occurs when an ML model’s performance declines due to changes in real-world data patterns. There are two types:
+
+Concept drift: The relationship between input and output changes over time.
+Data drift: The statistical properties of input data shift.
+Handling model drift involves:
+
+Regular monitoring using tools like Evidently AI or WhyLabs.
+Automated retraining pipelines triggered when drift is detected.
+Model validation before redeployment to prevent performance degradation.”
+
+
+3. Model explainability
+Model explainability refers to understanding and interpreting ML model decisions
+Explainability techniques include:
+
+SHAP (SHapley Additive Explanations): Assigns importance to each feature in predictions.
+LIME (Local Interpretable Model-agnostic Explanations): Generates local approximations of model decisions.
+Feature importance analysis to identify influential variables.
+
+
+4. Model reproducability
+Reproducibility in MLOps ensures that models can be trained and deployed with the same results over time
+Data versioning using DVC or Delta Lake.
+Model tracking with MLflow or Weights & Biases.
+Environment management using containerization (Docker, Kubernetes).
+Code versioning with Git and infrastructure-as-code (Terraform).
+
+5. Scaling challenges
+Data governance and security
+Model monitoring at scale
+Infrastructure complexity
+Cross functional collab
+Automating retraining pipelines
+
+
+6. Feature Drift
+Feature drift occurs when the distribution of a model’s input features changes over time, leading to decreased model performance
+To detect and handle feature drift:
+
+Monitor feature distributions over time using Evidently AI or Fiddler AI.
+Automate retraining pipelines when drift is detected.
+Use adaptive learning to update models dynamically.
+
+7. Model testing
+A/B testing in MLOps compares two model versions (A = current, B = new) to evaluate improvements before full deployment. Steps to implement A/B testing:
+a. Split traffic between models (e.g., 50%-50% or progressive rollout).
+b. Define key metrics (accuracy, latency, business impact).
+c. Monitor real-time performance using dashboards.
+d. Analyze statistical significance to determine the better model.
+e. Deploy the winning model if it shows improvement.
+
+8. Online Feature Vs Offline Feature Store
+Online feature store for real time low latency inference such as redis lookup
+Used for recommendation system, fraud system
+Offline feature store stores precomputed features for model training and inference
+Used for historical analysis, feature engineering and model re-training
+
+
+9. model re-training vs retuning
+model re-training involves training a model from scratch or incrementally with updated data.
+model re-tuning Involves adjusting hyperparameters or fine-tuning the model architecture without full retraining.
+
+10. Model shadowing
+Deploying a new model without affecting users
+Deploy the new model in shadow mode alongside the current model.
+Route real-world traffic to both models without exposing results of the shadow model to users.
+Compare predictions of both models against actual outcomes.
+Analyze key metrics (accuracy, latency, stability) before full deployment.
+Gradually promote the new model to replace the old model if performance is satisfactory.
+
+11. Model governance and compliance
+Model governance ensures ML models comply with regulatory, ethical, and operational standards. Best practices include:
+
+Versioning & Auditing: Track model changes, datasets, and metadata (MLflow, DVC).
+Bias & Fairness Checks: Use fairness assessment tools like IBM AI Fairness 360.
+Explainability & Transparency: Implement SHAP or LIME for interpretable decisions.
+Automated Monitoring: Detect data drift, model decay, and compliance violations.
+Access Control & Security: Implement RBAC (Role-Based Access Control) in ML pipelines.
+
+12. Model lineage - Model lineage refers to tracking the end-to-end history of an ML model
+
+13. ML Model optimization
+a. Convert models to lower precision (INT8) to reduce latency
+b. Pruning and distillation - reduce model size removing unnecessary parameters
+c. batch inference -
+d. hardware acceleration
+
