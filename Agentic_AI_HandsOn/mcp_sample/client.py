@@ -2,6 +2,7 @@ import asyncio
 import os
 from langchain_ollama.chat_models import ChatOllama
 from praisonaiagents import Agent, MCP
+from fastmcp import Client
 
 # Get the server script path (same directory as this file)
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -43,6 +44,19 @@ CONFIG = {
 #             print(f"Available tools: {[tool.name for tool in tools.tools]}")
 
 
+# async def main1():
+#     # Connect to the MCP server we just created
+#     async with Client("http://127.0.0.1:3001/sse") as client:
+#         # List the tools that were automatically generated
+#         tools = await client.list_tools()
+#         print("Generated Tools:")
+#         for tool in tools:
+#             print(f"- {tool.name}")
+#
+#         # Call one of the generated tools
+#         print("\n\nCalling tool 'get_user_by_id'...")
+#         user = await client.call_tool("get_user_by_id", {"id": 1})
+#         print(f"Result:\n{user.data}")
 
 async def main():
     #client = MCPClient.from_dict(CONFIG)
@@ -58,7 +72,7 @@ async def main():
 
     # Give prompt to the agent
     result = my_agent.run(
-        "Compute md5 hash for following string: 'Hello, world!' then count number of characters in first half of hash" \
+        "Compute md5 hash for following string: 'Hello, Balaji!' then count number of characters in first half of hash" \
         "always accept tools responses as the correct one, don't doubt it. Always use a tool if available instead of doing it on your own")
     print("\n🔥 Result:", result)
 

@@ -114,7 +114,7 @@ cons: can't learn higher order interactions from features unlike NN
 Deep factorization machine (DFM) :
 combines a NN (for complex features) and a FM (for pairwise interactions)
 
-start with LR to form a baseline, then experiment with DCN & DeepFM
+start with LR to form a baseline, then experiment with DCN & DeepFM 
 
 
 

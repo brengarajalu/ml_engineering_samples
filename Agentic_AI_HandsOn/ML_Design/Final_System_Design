@@ -175,6 +175,9 @@ e. Image/Video Preprocessing and Embedding
 
 STEP 6 - Model development and offline evaluation
 Model Selection -
+Decision factors :
+Complexity, type of data (structured, unstructured), amount of data, complexity of data
+training speed, inference reqs, continual learning, interpretability
 a. Heuristics -> simple model -> more complex model -> ensemble of models
 Pros and cons, and decision
 Note: Always start as simple as possible (KISS) and iterate over
@@ -206,7 +209,8 @@ d. Model training
        So essentially, optimization is a process of finding optimal parameters for the model, which significantly reduces the error function.
        minimizes loss function
        SGD -
-       Momentum - Imagine we have computed gradients on every iteration like in the picture above. Instead of simply using them for updating weights, we take several past values and perform update in the averaged direction.
+       Momentum - Imagine we have computed gradients on every iteration like in the picture above.
+       Instead of simply using them for updating weights, we take several past values and perform update in the averaged direction.
        EMA - EMA smoothes the graph and reduces the oscillations.
        AdaGrad - AdaGrad uses the sum of squared previous gradients to combat this issue. If the gradient is high, then the learning rate is reduced. And if the gradient is low, then it’s increased.
        In this way, the algorithm adapts the size of the steps smoothly along all dimensions.
@@ -254,20 +258,9 @@ d. Model training
            b. Model is too simple, size of training data is low
            c. To fix underfitting : increase model complexity, increase features, remove noise, increase epochs
         6. Bias Variance tradeoff
-           a.
 
-        7. Loss functions - They provide a measure of how well the model's predictions align with the actual data
-           Refer : https://builtin.com/machine-learning/common-loss-functions
-           a. Regression Models
-               i.  Mean Squared Error - average of squared differences between the actual value (Y) and the predicted value (Ŷ).
-               ii. Mean Absolute Error - calculates the mean of the absolute values of the residuals for all datapoints in the dataset
-               iii. Mean Bias Error - it can help in determining whether the model has a positive bias or negative bias
-               iv. Huber Loss - The Huber loss function uses a quadratic penalty (like MSE) for errors smaller than δ (delta), and a linear penalty (like MAE) for errors larger than δ.
-          b. Classification
-               i. Cross-Entropy Loss (Log Loss) - This loss function measures how well the predicted probabilities match the actual labels.
-               ii. Kullback-Leibler Divergence - a widely used loss function in machine learning(NN) that measures how one probability distribution differs from a reference probability distribution.
-               iii. Hinge Loss - Used in SVM - Hinge loss penalizes the wrong predictions and the right predictions that are not confident.
-
+        7. Hyperparameter tuning
+            GridSearchCV - Combines hyperparamter combinations with a matrix styled input to find the model with best hyperparameter combination
 
 STEP 7 - Prediction Service
 a. Data processing and verification

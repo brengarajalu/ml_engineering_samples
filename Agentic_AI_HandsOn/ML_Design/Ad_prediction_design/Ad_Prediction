@@ -16,7 +16,7 @@ Parallel DCN architecture: sparse input features -> embedding layers -> dense fe
 Factorization machine (FM): embedding-based model with logistic regression + pairwise feature interactions. Widely used on ad click prediction systems, as it model complex interactions between features.
 model all pairwise feature interactions by learning an embedding vector for each feature, interaction between 2 features is determined by dot product of their embeddings.
 Deep Factorization machine (DeepFM): combine FM for low-level pairwise feature interactions + DNN to learn higher-order interactions from features.
-Architecture: sparse input features -> embedding layers -> dense feature embdddings -> deep NN + pairwise feature interactions + per feature weights -> sigmoid -> prob.
+Architecture: sparse input features -> embedding layers -> dense feature embeddings -> deep NN + pairwise feature interactions + per feature weights -> sigmoid -> prob.
 improvement: GBDT + DeepFM, GBDT to convert original features to predictive features, DeepFM for new features.
 More variants: XDeepFM, Field-aware FM (FFM).
 Training

@@ -1,6 +1,10 @@
+import asyncio
 from typing import Any
 import hashlib
 from venv import logger
+import aiofiles
+from fastmcp import Context
+
 
 from mcp.server.fastmcp import FastMCP
 from mcp.server.auth.provider import TokenVerifier, AccessToken
@@ -25,6 +29,57 @@ mcp = FastMCP("public-demo")
 #         required_scopes=["user"],
 #     ),
 # )
+
+
+@mcp.resource("config://version")
+def get_version():
+    return "2.0.1"
+
+
+# @mcp.resource("file:///app/data/important_log.txt", mime_type="text/plain")
+# async def read_important_log(url: str, ctx: Context) -> str:
+#     """Reads content from a specific log file asynchronously."""
+#     try:
+#         async with aiofiles.open("/app/data/important_log.txt", mode="r") as f:
+#             content = await f.read()
+#         return content
+#     except FileNotFoundError:
+#         return "Log file not found."
+
+
+@mcp.tool()
+async def process_data(uri: str, ctx: Context):
+    # Log a message to the client
+    await ctx.info(f"Processing {uri}...")
+
+    # Read a resource from the server
+    data = await ctx.read_resource(uri)
+
+    # Ask client LLM to summarize the data
+    summary = await ctx.sample(f"Summarize: {data.content[:500]}")
+
+    # Return the summary
+    return summary.text
+
+
+@mcp.tool()
+async def download_file(url: str, ctx: Context) -> str:
+    """Download a file with percentage progress."""
+    total_size = 1000  # KB
+    downloaded = 0
+
+    while downloaded < total_size:
+        # Download chunk
+        chunk_size = min(50, total_size - downloaded)
+        downloaded += chunk_size
+
+        # Report percentage progress
+        percentage = (downloaded / total_size) * 100
+        await ctx.report_progress(progress=percentage, total=100)
+
+        await asyncio.sleep(0.1)  # Simulate download time
+
+    return f"Downloaded file from {url}"
 
 
 @mcp.tool()
@@ -59,5 +114,5 @@ def get_first_half(input_str: str) -> str:
 
 if __name__ == "__main__":
     # Initialize and run the server
+    # mcp.run(transport='streamable-http')
     mcp.run(transport='stdio')
-    #     mcp.run(transport="streamable-http")
