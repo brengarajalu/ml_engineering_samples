@@ -57,10 +57,14 @@ Ranking metrics or Recommendations Metrics :
    MRR is often used in search and recommendation systems to assess how quickly users find relevant content
 
 
-Regression metrics - MSE, MAE
+Regression metrics - MSE, MAE, RMSE, ME
+ME - Average difference between observed and predicted values
+MAE - Average absolute difference between predicted and actual summation of yi - xi/n
 Problem specific metrics - BLEU, BLEURT, ROUGE etc
     BLEU (BiLingual Evaluation Understudy) :  count the ratio of matches, with brevity penalty, n-grams precision, weight for different n-gram precisions
     ROUGE (Recall-Oriented Understudy for Gisting Evaluation): recall = # matching n-grams / total # n-grams in reference. Lack of contextual understanding.
+
+Image - CIDEr (Consensus-based Image Description Evaluation) metric is a way of evaluating the quality of generated textual descriptions of images
 
 Online Metrics :
 CTR (Click through rate) - Number of Clicks/Number of Impressions ×100%
@@ -170,7 +174,7 @@ e. Image/Video Preprocessing and Embedding
     Normalization
     Color Space Transformation
     Video: Video Encoding, Frame Encoding *(*Frame Decoding, Frame Sampling)
-    VGG, ResNet, ViT, CLIP - Encodes video and text in the same space
+    VGG, ResNet, ViT, CLIP, SIMCLR - Encodes video and text in the same space
 
 
 STEP 6 - Model development and offline evaluation
@@ -186,7 +190,7 @@ b. Modelling choices
    2. Decision tree variants
    3. NN (CNN, RNN, Transformers)
      CNN - Convolutional neural net is suited for image
-     RNN -  RNNs feed information back into the network at each step and peforms well for sequential data that needs memory
+     RNN -  RNNs feed information back into the network at each step and performs well for sequential data that needs memory
             LSTM RNN - introduce a memory mechanism to overcome the vanishing gradient problem.
             Applications - Time-Series Prediction, Speech Recognition, Image and Video Processing
             Limitations -
@@ -197,8 +201,8 @@ c. Dataset - tran, test dataset split, probabilistic sampling methods
 d. Model training
    1. Loss functions - MSE, Huber Loss, Hinge Loss
       a. Regression Models
-       i.  Mean Squared Error - average of squared differences between the actual value (Y) and the predicted value (Ŷ).
-       ii. Mean Absolute Error - calculates the mean of the absolute values of the residuals for all datapoints in the dataset
+       i.  Mean Squared Error (MSE) - average of squared differences between the actual value (Y) and the predicted value (Ŷ).
+       ii. Mean Absolute Error (MAE) - calculates the mean of the absolute values of the residuals for all datapoints in the dataset
        iii. Mean Bias Error - it can help in determining whether the model has a positive bias or negative bias
        iv. Huber Loss - The Huber loss function uses a quadratic penalty (like MSE) for errors smaller than δ (delta), and a linear penalty (like MAE) for errors larger than δ.
       b. Classification
@@ -308,7 +312,7 @@ Operations: Throughput, Latency, # of Requests
 Alerts :
 ML Specific:
 a. Data Drift [Covariate Shift/Feature Drift, Prior Probability Shift/Label Drift, Concept Drift] → Histogram Testing and Data Visualization
-b. Model Drift → perfomance degradation → train periodically check feature importance
+b. Model Drift → performance degradation → train periodically check feature importance
 c. Seasonality → Timely pattern shifts that require model changes
 Scalability - Data and model parallelism, data partition
 TradeOff's :
@@ -317,6 +321,15 @@ TradeOff's :
 3. Novelty effect - The novelty effect refers to temporary changes in user behavior simply because something is new. Identify outliers, Segment user cohorts etc
 4. Exploration exploitation trade-off :
 Multi-armed bandit (an agent repeatedly selects an option and receives a reward/cost. The goal of to maximize its cumulative reward over time, while simultaneously learning which options are most valuable.)
+
+
+
+STEP 10 - GUARD RAIL
+These guardrails should evaluate both input and output information to ensure that the LLM's responses adhere to the 'Three H Principle'
+(Helpful, Harmless, and Honest).
+
+
+
 
 Infra :
 Training

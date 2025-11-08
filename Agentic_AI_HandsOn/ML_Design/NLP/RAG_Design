@@ -43,7 +43,7 @@ e. The LLM primarily needs to do more or access live, rapidly changing informati
 LLM Agents :
 LLM AI agents are AI entities powered by LLM's. Understands natural language instructions, interact dynamically
 and peforms tasks
-a. Contextual undestanding
+a. Contextual understanding
 b. Tool integration
 c. Autonomous task execution
 d. Multi-agent collaboration

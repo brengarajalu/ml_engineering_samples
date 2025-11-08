@@ -60,7 +60,7 @@ focus on recall, millions/billions into 10Ks
 Ranking
 ML based
 multi-stage ranker: if more than 10k items to select from or QPS > 10k
-100k items: stage 1 (liner model) -> stage 2 (DNN model) -> 500 items
+100k items: stage 1 (linear model) -> stage 2 (DNN model) -> 500 items
 Blender:
 outputs a SERP (search engine result page)
 blends results from multiple sources e.g. textual (inverted index, semantic) search, visual search, etc.
@@ -157,7 +157,7 @@ train-valid/test split: 70/30 (of 70 million)
 temporal affect: e.g. use 3 weeks data: first 2/3 of weeks: train, last week valid / test
 Pairwise approach:
 ranks items according to their relative order, which is closer to the nature of ranking
-predict doc scores in a way that miimizes No of inversions in the final ranked result
+predict doc scores in a way that minimizes No of inversions in the final ranked result
 Two options for train data generation for pointwise approach
 human raters: each human rates 10 results per 100K queries * 10 humans = 10M examples
 expensive, doesn't scale

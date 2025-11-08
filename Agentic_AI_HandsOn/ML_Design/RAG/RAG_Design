@@ -20,6 +20,7 @@ LLM Vs RAG
 An LLM should use RAG to provide up-to-date information from a user’s input, whether that’s related to a customer, an employee, or the business more broadly. And an LLM should use MCP when a user wants to perform actions inside of an application, such as creating a ticket, sending an email to a new hire, or updating a customer’s account information.
 
 Put simply: RAG is best suited for enterprise AI search while MCP should support agentic AI use cases.
+RAG reduces the context to match the domain instead of open ended response from LLM
 
 When Should You Use RAG?
 RAG is likely your best bet when:
@@ -133,4 +134,22 @@ Fine Tuning
 
 
 
-P
+3. Context management
+a. Using file system as context can reduce help context reduction as the LLM offer 128K tokens
+
+4. Attention management
+a. Use a todo file and update it after tool call as this increases the models attention plan
+since model can get lost when calling many tools
+b. Keep the wrong predictions in the system so model can understand and correct
+c. Instead of few shot prompting increase diversity of phrases
+
+
+5. Prompt fine tuning
+ a. Prompt templates support placeholders so that values are dynamically computed and replaced based on the context dynamically.
+ b. Use langchain to orchestrate the operations such as fetching and transforming data, preparing prompts
+ c. Use prompt templates with templates such as jinja templates and use backend service to feed them to LLM
+
+6. Accuracy
+a. Identify the data gaps and iteratively fine tune the prompt to improve LLM accuracy
+b.
+

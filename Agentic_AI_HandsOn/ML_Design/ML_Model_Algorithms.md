@@ -42,14 +42,19 @@
    b. RNN  (EG: LSTM) predicting stock prices based on historical data.  they remember previous inputs for better predictions. 
    c. Transformers such as BERT, T5 for chatbots etc
    d. FNN - The simplest type, where data flows straight through from input to output. Ideal for general-purpose predictions.
-
+  
   Classification :  Cross Entrophy
   Activation : Binary :  Relu Multi-label/multi-class : 
   Regression : 
    Loss : MSE, MAE
    hidden layerActivation : Relu 
   output layer activation : logistic, sigmoid (for multi-class)
-        
+
+  Pros :
+  Can handle high cardinality of features 
+
+  Cons : 
+  Training is expensive
 
 4. Recommendation Systems
 Product recommendations (e-commerce), movie recommendations, content suggestions.
